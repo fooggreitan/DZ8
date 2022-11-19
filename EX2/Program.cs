@@ -1,51 +1,66 @@
-﻿// Задача 50. Напишите программу, которая на вход принимает позиции элемента в двумерном массиве, 
-// и возвращает значение этого элемента или же указание, что такого элемента нет.
+﻿// Задача 56: Задайте прямоугольный двумерный массив. Напишите программу, которая будет находить строку с наименьшей суммой элементов.
 // Например, задан массив:
 // 1 4 7 2
 // 5 9 2 3
 // 8 4 2 4
-// 1, 7 -> такого элемента в массиве нет
+// 5 2 6 7
+// Программа считает сумму элементов в каждой строке и выдаёт номер строки с наименьшей суммой элементов: 1 строка
 
-int[] meaningNumbersArray = Console.ReadLine().Split(',').Select(int.Parse).ToArray();
-
-int[,] CreateArrayRndInt(int row, int columns, int min, int max)
+int[,] CreateMatrixRndInt(int rows, int columns, int min, int max)
 {
-    var array = new int[row, columns];
+    var matrix = new int[rows, columns];
     var rnd = new Random();
-    for (int i = 0; i < array.GetLength(0); i++)
+
+    for (int i = 0; i < matrix.GetLength(0); i++)
     {
-        for (int j = 0; j < array.GetLength(1); j++)
+        for (int j = 0; j < matrix.GetLength(1); j++)
         {
-            array[i, j] = rnd.Next(min, max + 1);
+            matrix[i, j] = rnd.Next(min, max + 1);
         }
     }
-    return array;
+    return matrix;
 }
 
-bool CheckingPositions(int[,] array)
+int SmallestLineNumber(int[,] matrix)
 {
-    if (meaningNumbersArray[0] < array.GetLength(0) && meaningNumbersArray[1] < array.GetLength(1)) return true;
-    else return false;
-}
+    int temp = 0;
+    int numberLine = 0;
 
-void PrintArray(int[,] array)
-{
-    for (int i = 0; i < array.GetLength(0); i++)
+    for (int i = 0; i < matrix.GetLength(0); i++)
     {
-        Console.Write("[");
-        for (int j = 0; j < array.GetLength(1); j++)
+        int sum = 0;
+
+        for (int j = 0; j < matrix.GetLength(1); j++)
         {
-            if (j < array.GetLength(1) - 1) Console.Write($"{array[i, j], 4}, "); // форматирование
-            else Console.Write($"{array[i, j], 4}"); // форматирование
+            sum += matrix[j, i]; 
         }
-        Console.WriteLine("]");
+
+        if (sum > temp)
+        {
+            temp = sum; 
+            numberLine = i; 
+        }
+    }
+
+    return numberLine;
+}
+
+void PrintMatrix(int[,] matrix)
+{
+    for (int i = 0; i < matrix.GetLength(0); i++)
+    {
+        Console.Write("|");
+        for (int j = 0; j < matrix.GetLength(1); j++)
+        {
+            if (j < matrix.GetLength(1) - 1) Console.Write($"{matrix[i, j],5}, ");
+            else Console.Write($"{matrix[i, j],5} ");
+        }
+        Console.WriteLine("|");
     }
 }
 
-int[,] array2D = CreateArrayRndInt(3, 4, 1, 100);
-PrintArray(array2D);
+int[,] createMatrixRndInt = CreateMatrixRndInt(3, 3, 1, 10);
+PrintMatrix(createMatrixRndInt);
 
-bool сheckingPositions = CheckingPositions(array2D);
-
-if (сheckingPositions) Console.WriteLine($"{array2D[meaningNumbersArray[0], meaningNumbersArray[1]]}");
-else Console.WriteLine("Такого элемента в массиве нет");
+int smallestLineNumber = SmallestLineNumber(createMatrixRndInt);
+Console.WriteLine($"Номер строки с наименьшей суммой элементов является: {smallestLineNumber} строка");
